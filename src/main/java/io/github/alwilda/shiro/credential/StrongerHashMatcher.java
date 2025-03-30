@@ -1,0 +1,10 @@
+package io.github.alwilda.shiro.credential;
+
+import org.apache.shiro.authc.credential.PasswordMatcher;
+
+public class StrongerHashMatcher extends PasswordMatcher {
+
+    public StrongerHashMatcher(Algorithm algorithm) {
+        setPasswordService(new StrongerHashPasswordService(algorithm));
+    }
+}

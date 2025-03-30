@@ -1,0 +1,32 @@
+package io.github.alwilda.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.github.alwilda.domain.entity.Permission;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.Set;
+
+public interface PermissionMapper extends BaseMapper<Permission> {
+
+    @Select("""
+            select a.name
+            from sys_permission a,
+                 sys_user_permission b
+            where a.name = b.permission_name
+              and a.enabled is true
+              and b.uid = #{uid}
+            union all
+            select b.name
+            from sys_role a,
+                 sys_permission b,
+                 sys_user_role c,
+                 sys_role_permission d
+            where a.name = c.role_name
+              and a.name = d.role_name
+              and b.name = d.permission_name
+              and a.enabled is true
+              and b.enabled is true
+              and c.uid = #{uid}
+            """)
+    Set<String> selectUserPermissions(long uid);
+}
